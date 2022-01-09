@@ -22,7 +22,7 @@ app = createApp()
 @app.route('/')
 def index():
     """Root"""
-    return render_template("html/index.html")
+    return render_template('index.html')
 
 
 @app.errorhandler(500)
