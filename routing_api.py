@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, render_template
 from utils import get_logger
 #from redis import Redis
 import routing_solver
@@ -31,7 +31,12 @@ def post_request_logging(response):
         pass
     return response
 
-@routingapi_blueprint.route("/api/solve", methods=["POST"])
+
+@routingapi_blueprint.route("/", methods=["GET"])
+def index():
+    return render_template("challenge7/index.html")
+
+@routingapi_blueprint.route("/api/solve", methods=["POST", "OPTIONS"])
 def solve():
     response = {"status": 0, "data": {}, "message": "Operation successful"}
     request_json = request.json

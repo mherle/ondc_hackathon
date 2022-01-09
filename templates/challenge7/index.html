@@ -16,7 +16,7 @@
 
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script type="text/javascript" src="ondcMapTracking.js"></script>
+    <script type="text/javascript" src="/static/js/ondcMapTracking.js"></script>
     <title>ONDC Challenge</title>
     <style>
         body {
@@ -141,7 +141,8 @@
         }
         {$.ajax({
             type: 'POST',
-            url: "https://run.mocky.io/v3/c94160f9-390d-477f-b5a3-9549d3a75df3",
+            //url: "https://run.mocky.io/v3/c94160f9-390d-477f-b5a3-9549d3a75df3",
+            url: "/challenge7/api/solve",
             data: JSON.stringify(params),
             contentType: "application/json",
             dataType: "json",
