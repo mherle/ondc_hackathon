@@ -39,6 +39,11 @@
             margin-bottom: 1rem;
             margin-left: 1rem;
         }
+        .info-section {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            margin-left: 1rem;
+        }
 
         select {
             appearance: none;
@@ -62,8 +67,8 @@
         <h3 class="text-center"><u>Challenge 7 -Delivery Route Optimization
             </u></h3>
     </section>
-    <section>
-        <div class="filter-section">
+    <section class="info-section">
+        <div >
             <label for="standard-select">Select a sample problem</label>
             <div class="select">
                 <select id="standard-select" style="margin-bottom: 5px;">
@@ -71,18 +76,14 @@
                 <button class="btn btn-primary" id="_solveButton">Solve</button>
             </div>
         </div>
-        <div class="form-group" id="problemOutputSection" style="display: none;">
-            <label for="problemOutput">Output</label>
-            <textarea class="form-control" id="problemOutput" rows="3"></textarea>
+        <div class="form-group ml-2" id="problemOutputSection" style="display: none;">
+            <label for="problemOutput"><u class="ml-3">Solution</u></label>
+            <h5 id="routeCountText"></h5>
+            <ul id="problemOutputList">
+            </ul>
+
+            <button class="btn btn-primary" id="clearPlotting">Clear plotting</button>
           </div>
-        <div id="availableSolutionPath" style="display: none;">
-            <label for="standard-select">Select a sample route</label>
-            <div class="select">
-                <select id="standard-select-solution" style="margin-bottom: 5px;">
-                </select>
-                <button class="btn btn-primary" id="_renderSelectedRoute">Plot Path</button>
-            </div>
-        </div>
     </section>
     <section>
         <div id="map"></div>
@@ -141,7 +142,6 @@
         }
         {$.ajax({
             type: 'POST',
-            //url: "https://run.mocky.io/v3/c94160f9-390d-477f-b5a3-9549d3a75df3",
             url: "/challenge7/api/solve",
             data: JSON.stringify(params),
             contentType: "application/json",
@@ -150,20 +150,23 @@
                 console.log('response', res)
                 if(res && res.status === 0){
                     routingPathsSolution = res.data.routingPaths;
-                    $("#problemOutput").val(JSON.stringify(routingPathsSolution))
-                    $("#problemOutputSection").show()
-                    var solutionSelect = document.getElementById("standard-select-solution")
+                    console.log('routing solution : ', routingPathsSolution)
+                    document.getElementById("routeCountText").innerText = routingPathsSolution.length + " routes in total:"
                     for(let i=0; i < routingPathsSolution.length; i++){
-                        newOption = document.createElement("option")
-                        newOption.innerText = "Solution " + (i + 1)
-                        newOption.value = i
-                        solutionSelect.appendChild(newOption)
-                    }
+                        $("#problemOutputList").append(
+                            `<li><b>Route ${i+1}:</b> ${routingPathsSolution[i].length} points</li>`
+                            )
+                        }
+                    $("#problemOutputSection").show()
                     $("#availableSolutionPath").show()
+                    let newCenterCoordinates = routingPathsSolution[0][0]
+                    console.log('new coordinates are ', newCenterCoordinates)
+                    map_init.setView(new window.L.LatLng(newCenterCoordinates[0], newCenterCoordinates[1]), 10)
+                    drawRoutePaths = drawRoute(routingPathsSolution, 0);
                 } else {
                     console.log("error:", res.message)
+                    alert(res.message)
                 }
-                alert(res.message)
                 //location.reload()
             },
             error: function (err, error) {
@@ -173,9 +176,8 @@
         })}
     }
 
-    $("#_renderSelectedRoute").click(function () {
-        var selectedSolutionPath = $("#standard-select-solution").val()
-        drawRoutePaths = drawRoute(routingPathsSolution, selectedSolutionPath);
+    $("#clearPlotting").click(function() {
+        clearMapContents()
     })
 </script>
 
