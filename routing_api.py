@@ -2,7 +2,7 @@ import json
 from datetime import datetime
 
 from flask import Blueprint, jsonify, request
-from routing_api import get_logger
+from utils import get_logger
 #from redis import Redis
 import routing_solver
 

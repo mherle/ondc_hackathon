@@ -2,7 +2,7 @@ import logging
 import logging.handlers
 import sys
 
-from flask import Flask, jsonify, render
+from flask import Flask, jsonify, render_template
 
 from routing_api import routingapi_blueprint
 
@@ -23,7 +23,7 @@ app = createApp()
 @app.route('/')
 def index():
     """Root"""
-    return render("html/index.html")
+    return render_template("html/index.html")
 
 
 @app.errorhandler(500)
