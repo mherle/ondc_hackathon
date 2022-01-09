@@ -1,7 +1,7 @@
 function initializeMap(divId) {
     var map_init = window.L.map(divId,{
-        center: [28.657147231414474, 77.23440006902206],
-        zoom:5
+        center: [12.908827037393776, 77.97771785510469],
+        zoom:11
     });
     return map_init
 }
@@ -22,26 +22,25 @@ function drawRoute(schemaObject, selectedIndex){
     })
 
     var startIcon = L.icon({
-        // iconUrl: 'racing-flag.png',
-        iconUrl: "http://leafletjs.com/examples/custom-icons/leaf-green.png",
-        iconSize: [45, 70],
-        iconAnchor: [22, 94],
+        // iconUrl: "http://leafletjs.com/examples/custom-icons/leaf-green.png",
+        iconUrl: "static/icons/icon_map_star.png",
+        iconSize: [35, 50],
+        iconAnchor: [22, 50],
         popupAnchor: [-3, -76],
-        // shadowUrl: 'racing-flag.png',
-        shadowUrl: "http://leafletjs.com/examples/custom-icons/leaf-shadow.png",
         shadowSize: [68, 95],
-        shadowAnchor: [22, 94]
+        shadowAnchor: [22, 94],
+        className: "text-primary"
     });
 
     var endIcon = L.icon({
-        iconUrl: "http://leafletjs.com/examples/custom-icons/leaf-red.png",
-        iconSize: [45, 70],
-        iconAnchor: [22, 94],
+        iconUrl: "static/icons/icon_map_e.png",
+        iconSize: [35, 50],
+        iconAnchor: [22, 50],
         popupAnchor: [-3, -76],
-        // shadowUrl: 'finish.png',
-        shadowUrl: "http://leafletjs.com/examples/custom-icons/leaf-shadow.png",
         shadowSize: [68, 95],
-        shadowAnchor: [22, 94]
+        shadowAnchor: [22, 94],
+        className: "text-primary"
+        
     });
         
     // var polyline = window.L.polyline(selected_route_waypoints, {color: '#3388ff', weight: 3}).addTo(map_init);
