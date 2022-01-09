@@ -208,7 +208,8 @@
 
     function handleSubmit(){
         var numberOfVehicles = $("#numberOfVehicles").val();
-        var centerCoordinates = $("#centerCoordinates").val();
+        //var centerCoordinates = $("#centerCoordinates").val();
+        var centerCoordinates = "12.922960508613679, 77.64851749383091"
         var visits = $("#visits").val();
         if(!numberOfVehicles || parseInt(numberOfVehicles) <= 0){
             alert("Invalid value of number of vehicles")
