@@ -130,7 +130,7 @@
     var routingPathsSolution = []
     var map_init = initializeMap("map");
     window.map_init = map_init
-    var drawRoutePaths = drawRoute(routingPathsSolution, -1);
+    var drawRoutePaths = drawRoute(routingPathsSolution, [], false);
 
     function solveRoutingProblem(){
         var selectedProblemSetIndex = $("#standard-select").val()
@@ -152,17 +152,23 @@
                     routingPathsSolution = res.data.routingPaths;
                     console.log('routing solution : ', routingPathsSolution)
                     document.getElementById("routeCountText").innerText = routingPathsSolution.length + " routes in total:"
+                    if($("#problemOutputList").length > 0){
+                        console.log('elements already presetn in ui list')
+                        $("#problemOutputList").empty();
+                    }
+                    let randomColorsList = []
                     for(let i=0; i < routingPathsSolution.length; i++){
+                        randomColorsList.push(generateRandomColor())
                         $("#problemOutputList").append(
-                            `<li><b>Route ${i+1}:</b> ${routingPathsSolution[i].length} points</li>`
+                            `<li><b>Route ${i+1}:</b> ${routingPathsSolution[i].length} points <span style="font-size: larger; color: ${randomColorsList[i]}">&#x25cf;</span></li>`
                             )
                         }
+                    console.log('random colors list is ', randomColorsList)
                     $("#problemOutputSection").show()
                     $("#availableSolutionPath").show()
                     let newCenterCoordinates = routingPathsSolution[0][0]
-                    console.log('new coordinates are ', newCenterCoordinates)
-                    map_init.setView(new window.L.LatLng(newCenterCoordinates[0], newCenterCoordinates[1]), 10)
-                    drawRoutePaths = drawRoute(routingPathsSolution, 0);
+                    map_init.setView(new window.L.LatLng(newCenterCoordinates[0], newCenterCoordinates[1]), 12)
+                    drawRoutePaths = drawRoute(routingPathsSolution, randomColorsList, true);
                 } else {
                     console.log("error:", res.message)
                     alert(res.message)

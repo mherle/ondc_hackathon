@@ -6,7 +6,7 @@ function initializeMap(divId) {
     return map_init
 }
 
-function drawRoute(routingPath, selectedIndex){
+function drawRoute(routingPath, colorsList, showPlottings){
     var map_init = window.map_init
     map_init.eachLayer(function (layer) {
         map_init.removeLayer(layer);
@@ -39,13 +39,12 @@ function drawRoute(routingPath, selectedIndex){
         shadowAnchor: [22, 94]
     });
     
-    if(selectedIndex !== -1){
+    if(showPlottings){
         for(let i=0; i < routingPath.length; i++){
             selected_route_waypoints = routingPath[i].map((item, index) => {
-                console.log('item is ', item)
                 return [item[0], item[1]]
             })
-            var polyline = window.L.polyline(selected_route_waypoints, {color: generateRandomColor(), weight: 3}).addTo(map_init);
+            var polyline = window.L.polyline(selected_route_waypoints, {color: colorsList[i], weight: 3}).addTo(map_init);
             plotMarkers(selected_route_waypoints, i)
         }
      
@@ -55,13 +54,13 @@ function drawRoute(routingPath, selectedIndex){
                 let markerContent = ""
                 if (index === 0){
                     markerTitle = "Start"
-                    markerContent = "Route "+ currentRouteIndex + " start"
+                    markerContent = "Route "+ (currentRouteIndex + 1) + " start"
                 } else if( index === selectedRoute.length - 1){
                     markerTitle = "End"
-                    markerContent = "Route "+ currentRouteIndex + " end"
+                    markerContent = "Route "+ (currentRouteIndex + 1) + " end"
                 }
                 if (markerTitle){
-                    (window.L.marker([item[0], item[1]], {icon: markerTitle === "Start" ? startIcon : endIcon}).addTo(map_init)).bindPopup("<b>" + markerTitle+ "</b><br></br>" + markerContent).openPopup();
+                    (window.L.marker([item[0], item[1]], {icon: markerTitle === "Start" ? startIcon : endIcon}).addTo(map_init)).bindPopup("<b>" + markerTitle+ "</b><br></br>" + markerContent, {autoClose: markerTitle === "Start" ? true : false}).openPopup();
                 } else {
                     window.L.marker([item[0], item[1]]).addTo(map_init)
                 }
@@ -73,14 +72,23 @@ function drawRoute(routingPath, selectedIndex){
 }
 
 
-function generateRandomColor(){
-    return '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
-}
+// function generateRandomColor(){
+//     return '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+// }
 
 function clearMapContents(){
     var map_init = window.map_init
     map_init.eachLayer(function (layer) {
         map_init.removeLayer(layer);
     });
-    drawRoute([], -1)
+    drawRoute([], [], false)
+    $("#problemOutputSection").hide()
+}
+
+function generateRandomColor() {
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += Math.floor(Math.random() * 10);
+    }
+    return color;
 }
