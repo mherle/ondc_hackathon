@@ -9,8 +9,7 @@ from routing_api import routingapi_blueprint
 
 def createApp():
     theapp = Flask(__name__)
-    theapp.logger.addHandler(
-        logging.handlers.SysLogHandler(address='/dev/log'))
+    theapp.logger.addHandler(logging.handlers.SysLogHandler(address='/dev/log'))
     theapp.logger.addHandler(logging.StreamHandler(sys.stdout))
     theapp.register_blueprint(routingapi_blueprint, url_prefix="/challenge7")
 

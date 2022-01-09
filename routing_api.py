@@ -7,7 +7,7 @@ from utils import get_logger
 import routing_solver
 
 
-routingapi_blueprint = Blueprint('', __name__, static_folder='logs')
+routingapi_blueprint = Blueprint('challenge7', __name__, static_folder='html/challenge7')
 
 ROUTING_LOG_NAME = "routing"
 request_logger = get_logger(ROUTING_LOG_NAME)
@@ -15,7 +15,6 @@ request_logger = get_logger(ROUTING_LOG_NAME)
 #redis_server = Redis.from_url("redis://localhost:6379/1")
 
 
-@routingapi_blueprint.before_request
 @routingapi_blueprint.before_request
 def log_request_info():
     try:
@@ -32,7 +31,7 @@ def post_request_logging(response):
         pass
     return response
 
-@routingapi_blueprint("/api/solve", methods=["POST"])
+@routingapi_blueprint.route("/api/solve", methods=["POST"])
 def solve():
     response = {"status": 0, "data": {}, "message": "Operation successful"}
     request_json = request.json
