@@ -368,9 +368,9 @@
                     if($("#problemOutputList").length > 0){
                         $("#problemOutputList").empty();
                     }
-                    let randomColorsList = []
+                    let randomColorsList = ["#0000ff", "#008000", "#FFFF00", "#228b22", "#2f4f4f", "#8b0000", "#dc143c", "#00008b", "#000000", "#FFFFFF"]
                     for(let i=0; i < routingPathsSolution.length; i++){
-                        randomColorsList.push(generateRandomColor())
+                        //randomColorsList.push(generateRandomColor())
                         $("#problemOutputList").append(
                             `<li><b>Route ${i+1}:</b> ${routingPathsSolution[i].length} points <span style="font-size: larger; color: ${randomColorsList[i]}">&#x25cf;</span></li>`
                             )
