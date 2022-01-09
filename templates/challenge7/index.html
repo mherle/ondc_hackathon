@@ -153,7 +153,6 @@
                     console.log('routing solution : ', routingPathsSolution)
                     document.getElementById("routeCountText").innerText = routingPathsSolution.length + " routes in total:"
                     if($("#problemOutputList").length > 0){
-                        console.log('elements already presetn in ui list')
                         $("#problemOutputList").empty();
                     }
                     let randomColorsList = []
@@ -163,11 +162,22 @@
                             `<li><b>Route ${i+1}:</b> ${routingPathsSolution[i].length} points <span style="font-size: larger; color: ${randomColorsList[i]}">&#x25cf;</span></li>`
                             )
                         }
-                    console.log('random colors list is ', randomColorsList)
                     $("#problemOutputSection").show()
                     $("#availableSolutionPath").show()
-                    let newCenterCoordinates = routingPathsSolution[0][0]
-                    map_init.setView(new window.L.LatLng(newCenterCoordinates[0], newCenterCoordinates[1]), 12)
+                    let avgLats = 0
+                    let avgLngs = 0
+                    let coordinatesCount = 0
+                    for(let j=0; j<routingPathsSolution.length; j++){
+                        for (let k=0; k<routingPathsSolution[j].length; k++){
+                            coordinatesCount += 1
+                            avgLats += routingPathsSolution[j][k][0]
+                            avgLngs += routingPathsSolution[j][k][1]
+                        }
+                    }
+                    avgLats = avgLats/coordinatesCount
+                    avgLngs = avgLngs/coordinatesCount
+                    let newCenterCoordinates = [avgLats, avgLngs]
+                    map_init.setView(new window.L.LatLng(newCenterCoordinates[0], newCenterCoordinates[1]), 13)
                     drawRoutePaths = drawRoute(routingPathsSolution, randomColorsList, true);
                 } else {
                     console.log("error:", res.message)

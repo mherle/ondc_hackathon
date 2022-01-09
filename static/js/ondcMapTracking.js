@@ -60,7 +60,8 @@ function drawRoute(routingPath, colorsList, showPlottings){
                     markerContent = "Route "+ (currentRouteIndex + 1) + " end"
                 }
                 if (markerTitle){
-                    (window.L.marker([item[0], item[1]], {icon: markerTitle === "Start" ? startIcon : endIcon}).addTo(map_init)).bindPopup("<b>" + markerTitle+ "</b><br></br>" + markerContent, {autoClose: markerTitle === "Start" ? true : false}).openPopup();
+                    // (window.L.marker([item[0], item[1]], {icon: markerTitle === "Start" ? startIcon : endIcon}).addTo(map_init)).bindPopup("<b>" + markerTitle+ "</b><br></br>" + markerContent, {autoClose: markerTitle === "Start" ? true : false}).openPopup();
+                    (window.L.marker([item[0], item[1]], {icon: markerTitle === "Start" ? startIcon : endIcon}).addTo(map_init)).bindPopup("<b>" + markerTitle+ "</b><br></br>" + markerContent, {autoClose: markerTitle === "Start" ? true : false});
                 } else {
                     window.L.marker([item[0], item[1]]).addTo(map_init)
                 }
