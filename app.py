@@ -12,7 +12,7 @@ def createApp():
     theapp.logger.addHandler(
         logging.handlers.SysLogHandler(address='/dev/log'))
     theapp.logger.addHandler(logging.StreamHandler(sys.stdout))
-    theapp.register_blueprint(routingapi_blueprint, url_prefix="/api")
+    theapp.register_blueprint(routingapi_blueprint, url_prefix="/challenge7")
 
     return theapp
 
