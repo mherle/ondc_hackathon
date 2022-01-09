@@ -68,22 +68,76 @@
             </u></h3>
     </section>
     <section class="info-section">
-        <div >
+       <div class="row">
+            <div class="col-sm-12 col-md-6">
+                <form>
+                    <div class="form-group row">
+                    <label for="numberOfVehicles" class="col-sm-2 col-form-label">Number of vehicles</label>
+                    <div class="col-sm-10 ">
+                        <input id="numberOfVehicles" type="number" class="form-control" id="numberOfVehicles" placeholder="Enter number of vehicles">
+                    </div>
+                    </div>
+                    <div class="form-group row">
+                    <label for="centerCoordinates" class="col-sm-2 col-form-label">Center coordinates</label>
+                    <div class="col-sm-10 ">
+                        <input name="centerCoordinates" type="text" class="form-control" id="centerCoordinates" placeholder="12.912335877018496, 77.63315380185875">
+                    </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="visits" class="col-sm-2 col-form-label">Visits</label>
+                        <div class="col-sm-10 ">
+                            <textarea 
+                                name="visits" 
+                                class="form-control" 
+                                id="visits" 
+                                rows="6"
+                                placeholder="Enter the coordinates separated by new line. e.g.
+                12.922960508613679, 77.64851749383091,
+                12.917355444320027, 77.64886081655655,
+                12.911582933226732, 77.65049159950333,
+                12.914260056402288, 77.60723293607332,
+                12.903802381246239, 77.60989368719699,
+                12.946550593491688, 77.61246860763924"
+                            ></textarea>
+                        </div>
+                    </div>
+                    
+                </form>
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                    <button onclick="handleSubmit()" class="btn btn-primary">Solve</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6 border border-light">           
+                <div class="form-group ml-2" id="problemOutputSection" style="display: none;">
+                    <h4><u>Solution</u></h4>
+                    <h5 id="routeCountText"></h5>
+                    <ul id="problemOutputList">
+                    </ul>
+                
+                    <button class="btn btn-primary" id="clearPlotting">Clear plotting</button>
+                </div>
+            </div>
+
+       </div>
+            
+        <!-- <div >
             <label for="standard-select">Select a sample problem</label>
             <div class="select">
                 <select id="standard-select" style="margin-bottom: 5px;">
                 </select>
                 <button class="btn btn-primary" id="_solveButton">Solve</button>
             </div>
-        </div>
-        <div class="form-group ml-2" id="problemOutputSection" style="display: none;">
+        </div> -->
+        <!-- <div class="form-group ml-2" id="problemOutputSection" style="display: none;">
             <label for="problemOutput"><u class="ml-3">Solution</u></label>
             <h5 id="routeCountText"></h5>
             <ul id="problemOutputList">
             </ul>
 
             <button class="btn btn-primary" id="clearPlotting">Clear plotting</button>
-          </div>
+        </div> -->
     </section>
     <section>
         <div id="map"></div>
@@ -117,29 +171,78 @@
     }
     ]
 
-    var mySelect = document.getElementById("standard-select")
-    for(let i=0; i < sampleProblemSets.length; i++){
-        newOption = document.createElement("option")
-        newOption.innerText = "Problem " + (i + 1)
-        newOption.value = i
-        mySelect.appendChild(newOption)
-    }
-    $("#_solveButton").click(function () {
-        solveRoutingProblem()
-    })
+    //var mySelect = document.getElementById("standard-select")
+    //for(let i=0; i < sampleProblemSets.length; i++){
+    //    newOption = document.createElement("option")
+    //    newOption.innerText = "Problem " + (i + 1)
+    //    newOption.value = i
+    //    mySelect.appendChild(newOption)
+    //}
+    //$("#_solveButton").click(function () {
+    //    solveRoutingProblem()
+    //})
     var routingPathsSolution = []
     var map_init = initializeMap("map");
     window.map_init = map_init
     var drawRoutePaths = drawRoute(routingPathsSolution, [], false);
 
-    function solveRoutingProblem(){
+    function handleSubmit(){
+        var numberOfVehicles = $("#numberOfVehicles").val();
+        var centerCoordinates = $("#centerCoordinates").val();
+        var visits = $("#visits").val();
+        if(!numberOfVehicles || parseInt(numberOfVehicles) <= 0){
+            alert("Invalid value of number of vehicles")
+        } else {
+            numberOfVehicles = parseInt(numberOfVehicles)
+            if(!centerCoordinates){
+                alert("Center coordinates field required")
+            } else {
+                var finalCenterCoordinates = centerCoordinates.split(",")
+                if (finalCenterCoordinates.length <2){
+                    alert("Invalid Center coordinates provided")
+                } else {
+                    finalCenterCoordinates = finalCenterCoordinates.map((item) => parseFloat(item.trim()))
+                    console.log('final coordinates', finalCenterCoordinates)
+                    if(!visits){
+                        alert("visits coordinates required")
+                    } else {
+                        var temp = visits.split("\n");
+                        var finalVisitCoordinates = []
+                        for(let j=0; j<temp.length; j++){
+                            let tempCords = temp[j].split(",")
+                            finalVisitCoordinates.push(
+                                [
+                                    parseFloat(tempCords[0].trim()),
+                                    parseFloat(tempCords[1].trim()),
+                                ]
+                            )
+                        }
+                        console.log('final visit coordinates are', finalVisitCoordinates)
+                        if(finalVisitCoordinates.length <= 0){
+                            alert("Please check if the visit coordinates are correct")
+                        } else {
+                            var params = {
+                                "store": finalCenterCoordinates,
+                                "visits": finalVisitCoordinates,
+                                "vehicles": numberOfVehicles,
+                            }
+                            console.log("params is ", params)
+                            solveRoutingProblem(params)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    function solveRoutingProblem(params){
         var selectedProblemSetIndex = $("#standard-select").val()
         var selectedProblemSet = sampleProblemSets[selectedProblemSetIndex]
-        var params = {
-            "store": selectedProblemSet.store,
-            "visits": selectedProblemSet.visits,
-            "vehicles": selectedProblemSet.vehicles
-        }
+        //var params = {
+        //    "store": selectedProblemSet.store,
+        //    "visits": selectedProblemSet.visits,
+        //    "vehicles": selectedProblemSet.vehicles
+        //}
         {$.ajax({
             type: 'POST',
             url: "/challenge7/api/solve",

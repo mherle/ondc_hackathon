@@ -17,26 +17,25 @@ function drawRoute(routingPath, colorsList, showPlottings){
     }).addTo (map_init);
 
     var startIcon = L.icon({
-        // iconUrl: 'racing-flag.png',
-        iconUrl: "http://leafletjs.com/examples/custom-icons/leaf-green.png",
-        iconSize: [45, 70],
-        iconAnchor: [22, 94],
+        // iconUrl: "http://leafletjs.com/examples/custom-icons/leaf-green.png",
+        iconUrl: "static/icons/icon_map_star.png",
+        iconSize: [35, 50],
+        iconAnchor: [22, 50],
         popupAnchor: [-3, -76],
-        // shadowUrl: 'racing-flag.png',
-        shadowUrl: "http://leafletjs.com/examples/custom-icons/leaf-shadow.png",
         shadowSize: [68, 95],
-        shadowAnchor: [22, 94]
+        shadowAnchor: [22, 94],
+        className: "text-primary"
     });
 
     var endIcon = L.icon({
-        iconUrl: "http://leafletjs.com/examples/custom-icons/leaf-red.png",
-        iconSize: [45, 70],
-        iconAnchor: [22, 94],
+        iconUrl: "static/icons/icon_map_e.png",
+        iconSize: [35, 50],
+        iconAnchor: [22, 50],
         popupAnchor: [-3, -76],
-        // shadowUrl: 'finish.png',
-        shadowUrl: "http://leafletjs.com/examples/custom-icons/leaf-shadow.png",
         shadowSize: [68, 95],
-        shadowAnchor: [22, 94]
+        shadowAnchor: [22, 94],
+        className: "text-primary"
+        
     });
     
     if(showPlottings){
@@ -44,7 +43,7 @@ function drawRoute(routingPath, colorsList, showPlottings){
             selected_route_waypoints = routingPath[i].map((item, index) => {
                 return [item[0], item[1]]
             })
-            var polyline = window.L.polyline(selected_route_waypoints, {color: colorsList[i], weight: 3}).addTo(map_init);
+            var polyline = window.L.polyline(selected_route_waypoints, {color: colorsList[i], weight: 4}).addTo(map_init);
             plotMarkers(selected_route_waypoints, i)
         }
      
