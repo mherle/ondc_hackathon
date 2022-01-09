@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script type="text/javascript" src="/static/js/ondcMapTrackingChallenge8.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+
+        .text-center{
+            text-align: center;
+        }
+        .filter-section{
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            margin-left: 1rem;
+        }
+
+        select {
+            appearance: none;
+            background-color: transparent;
+            border: 1px solid black;
+            padding: 0.3em  0;
+            margin: 0;
+            width: 100%;
+            font-family: inherit;
+            font-size: inherit;
+            cursor: inherit;
+            line-height: inherit;
+          }
+
+          ul.timeline {
+            list-style-type: none;
+            position: relative;
+        }
+        ul.timeline:before {
+            content: ' ';
+            background: #d4d9df;
+            display: inline-block;
+            position: absolute;
+            left: 29px;
+            width: 2px;
+            height: 100%;
+            z-index: 400;
+        }
+        ul.timeline > li {
+            margin: 20px 0;
+            padding-left: 20px;
+        }
+        ul.timeline > li:before {
+            content: ' ';
+            background: white;
+            display: inline-block;
+            position: absolute;
+            border-radius: 50%;
+            border: 3px solid #22c0e8;
+            left: 20px;
+            width: 20px;
+            height: 20px;
+            z-index: 400;
+        }
+    </style>
+</head>
+<body>
+    <section>
+        <h2 class="text-center"><u>ONDC Innovation Hackathon</u></h2>
+        <h3 class="text-center"><u>Challenge 8 - Tracking on Open Source Maps</u></h3>
+    </section>
+    <section>
+        <div class="filter-section">
+            <label for="standard-select">Select a route</label>
+                <div class="select">
+                <select id="standard-select" >
+                </select>
+                <!-- <button id="renderButton">Render</button> -->
+                </div>
+        </div>
+        <div>
+            <div class="row">
+                <div class="col-sm-12 col-md-3 col-lg-2">
+                    <div class="card p-2">
+                        <div class="card-body">
+                          <!-- <h5 class="card-title"><b>Timeline</b></h5> -->
+                          <!-- <ul class="timeline">
+                            <li>
+                                <span><b>2021-11-09 10:12</b></>
+                                <p>Route from path A to B</p>
+                            </li>
+                            <li>
+                                <span><b>2021-11-09 10:12</b></>
+                                <p>Route from path A to B</p>
+                            </li>
+                            <li>
+                                <span><b>2021-11-09 10:12</b></>
+                                <p>Route from path A to B</p>
+                            </li>
+                            <li>
+                                <span><b>2021-11-09 10:12</b></>
+                                <p>Route from path A to B</p>
+                            </li>
+                            <li>
+                                <span><b>2021-11-09 10:12</b></>
+                                <p>Route from path A to B</p>
+                            </li>
+                            <li>
+                                <span><b>2021-11-09 10:12</b></>
+                                <p>Route from path A to B</p>
+                            </li>
+                            <li>
+                                <span><b>2021-11-09 10:12</b></>
+                                <p>Route from path A to B</p>
+                            </li>
+                        </ul> -->
+                          <div class="mb-2">
+                            <label for="customRange1" class="form-label">Timeline range</label>
+                            <input type="range" class="form-range" id="customRange1">
+                          </div>
+                          <br/>
+                        </div>
+                      </div>
+                </div>
+                <div class="col-sm-12 col-md-9 col-lg-10">
+                    <div id="map"></div>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+</body>
+<script>
+    var map_init = initializeMap("map");
+    window.map_init = map_init
+    const schemaObject = {'routes': [[{'lat': 12.908827037393776, 'lng': 77.97771785510469, 'ts': '2022-01-08 23:03:21'}, {'lat': 12.949644167828884, 'lng': 77.78762646775084, 'ts': '2022-01-09 16:07:21'}, {'lat': 12.907050012406954, 'lng': 77.71357327756142, 'ts': '2022-01-09 02:29:21'}, {'lat': 12.985011015522717, 'lng': 77.97218185982355, 'ts': '2022-01-09 00:41:21'}, {'lat': 12.918060028919806, 'lng': 77.92454303696525, 'ts': '2022-01-08 17:59:21'}], [{'lat': 12.99970514706994, 'lng': 77.77019110166393, 'ts': '2022-01-09 04:36:21'}, {'lat': 12.945831006810423, 'lng': 77.88227505234353, 'ts': '2022-01-08 17:11:21'}, {'lat': 12.900982062919988, 'lng': 77.87282632884722, 'ts': '2022-01-08 23:38:21'}, {'lat': 12.98926447512133, 'lng': 77.68563153511907, 'ts': '2022-01-09 02:12:21'}, {'lat': 12.960406011528617, 'lng': 77.96209717314211, 'ts': '2022-01-09 03:51:21'}], [{'lat': 12.989892147445941, 'lng': 77.92426792307766, 'ts': '2022-01-09 15:42:21'}, {'lat': 12.959841092704417, 'lng': 77.68694161669688, 'ts': '2022-01-09 03:54:21'}, {'lat': 12.935259337011454, 'lng': 77.9146459640837, 'ts': '2022-01-08 19:57:21'}, {'lat': 12.908275453967024, 'lng': 77.98743229639118, 'ts': '2022-01-09 04:34:21'}, {'lat': 12.941201284803617, 'lng': 77.94732623060925, 'ts': '2022-01-09 05:30:21'}], [{'lat': 12.992495336034892, 'lng': 77.72138044737892, 'ts': '2022-01-09 04:24:21'}, {'lat': 12.937590735526022, 'lng': 77.85783484949872, 'ts': '2022-01-08 22:44:21'}, {'lat': 12.922723448510284, 'lng': 77.75119367204253, 'ts': '2022-01-08 18:12:21'}, {'lat': 12.904120872351813, 'lng': 77.94963831129442, 'ts': '2022-01-08 19:02:21'}, {'lat': 12.942644272592348, 'lng': 77.79000962401575, 'ts': '2022-01-08 20:58:21'}], [{'lat': 12.931714888116984, 'lng': 77.91799613850255, 'ts': '2022-01-09 09:29:21'}, {'lat': 12.969866530253531, 'lng': 77.76851690013666, 'ts': '2022-01-09 04:49:21'}, {'lat': 12.94184653730259, 'lng': 77.81170025835661, 'ts': '2022-01-08 23:26:21'}, {'lat': 12.959070159624801, 'lng': 77.71177574707421, 'ts': '2022-01-09 01:50:21'}, {'lat': 12.932533410391919, 'lng': 77.91818518059019, 'ts': '2022-01-09 04:26:21'}]]}
+    var mySelect = document.getElementById("standard-select")
+    for(let i=0; i < schemaObject.routes.length; i++){
+        newOption = document.createElement("option")
+        newOption.innerText = "Path " + i
+        newOption.value = i
+        mySelect.appendChild(newOption)
+    }
+    var selectedPath = document.getElementById("standard-select").value || 0
+    var drawRoutePaths = drawRoute(schemaObject, selectedPath);
+    $("#standard-select").change(function(e) {
+        document.getElementById("standard-select").value = e.target.value
+        selectedPath = e.target.value
+        drawRoutePaths = drawRoute(schemaObject, selectedPath)
+    })
+    //console.log('moment is ', window.moment())
+    //$("#renderButton").click(function (){
+      //  var selectedPath = document.getElementById("standard-select").value || 0
+      //  console.log('selected path is ', selectedPath)
+    //   drawRoutePaths = drawRoute(schemaObject, selectedPath);
+    //})
+    //drawRoutePaths = drawRoute(schemaObject, selectedPath);
+</script>
+</html>
