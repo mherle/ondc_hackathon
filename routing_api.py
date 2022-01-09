@@ -4,6 +4,7 @@ from datetime import datetime
 from flask import Blueprint, jsonify, request
 from routing_api import get_logger
 #from redis import Redis
+import routing_solver
 
 
 routingapi_blueprint = Blueprint('', __name__, static_folder='logs')
@@ -30,3 +31,19 @@ def post_request_logging(response):
     except:
         pass
     return response
+
+@routingapi_blueprint("/api/solve", methods=["POST"])
+def solve():
+    response = {"status": 0, "data": {}, "message": "Operation successful"}
+    request_json = request.json
+    mandatory_fields = ["store", "visits", "vehicles"]
+    for field in mandatory_fields:
+        if not request_json.get(field):
+            response["status"], response["message"] = -1, "{} field is required".format(field)
+            return jsonify(response)
+    store = request_json.get("store")
+    visits = request_json.get("visits")
+    vehicles = request_json.get("vehicles")
+    routing_solution_path = routing_solver.do_solve(store, visits, vehicles)
+    response["data"]["routingPaths"] = routing_solution_path
+    return jsonify(response)

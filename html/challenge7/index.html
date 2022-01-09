@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>ONDC Challenge</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .filter-section {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            margin-left: 1rem;
+        }
+
+        select {
+            appearance: none;
+            background-color: transparent;
+            border: 1px solid black;
+            padding: 0.3em 0;
+            margin: 0;
+            width: 100%;
+            font-family: inherit;
+            font-size: inherit;
+            cursor: inherit;
+            line-height: inherit;
+        }
+
+    </style>
+</head>
+
+<body>
+    <section>
+        <h2 class="text-center"><u>ONDC Innovation Hackathon</u></h2>
+        <h3 class="text-center"><u>Challenge 7 -Delivery Route Optimization
+            </u></h3>
+    </section>
+    <section>
+        <div class="filter-section">
+            <label for="standard-select">Select a sample problem</label>
+            <div class="select">
+                <select id="standard-select" style="margin-bottom: 5px;">
+                </select>
+                <button class="btn btn-primary" id="_solveButton">Solve</button>
+            </div>
+        </div>
+        <div class="form-group" id="problemOutputSection" style="display: none;">
+            <label for="problemOutput">Output</label>
+            <textarea class="form-control" id="problemOutput" rows="3"></textarea>
+          </div>
+    </section>
+</body>
+<script>
+    var sampleProblemSets = [
+    {
+        store: [12.912335877018496, 77.63315380185875],
+        visits: [
+            [12.922960508613679, 77.64851749383091],
+            [12.917355444320027, 77.64886081655655],
+            [12.911582933226732, 77.65049159950333],
+            [12.914260056402288, 77.60723293607332],
+            [12.903802381246239, 77.60989368719699],
+            [12.946550593491688, 77.61246860763924]
+        ],
+        vehicles: 3
+    },
+    {
+        store: [12.912335877018496, 77.63315380185875],
+        visits: [
+            [12.922960508613679, 77.64851749383091],
+            [12.917355444320027, 77.64886081655655],
+            [12.911582933226732, 77.65049159950333],
+            [12.914260056402288, 77.60723293607332],
+            [12.903802381246239, 77.60989368719699],
+            [12.946550593491688, 77.61246860763924]
+        ],
+        vehicles: 3
+    }
+    ]
+
+    var mySelect = document.getElementById("standard-select")
+    for(let i=0; i < sampleProblemSets.length; i++){
+        newOption = document.createElement("option")
+        newOption.innerText = "Problem " + (i + 1)
+        newOption.value = i
+        mySelect.appendChild(newOption)
+    }
+    $("#_solveButton").click(function () {
+        solveRoutingProblem()
+    })
+
+    function solveRoutingProblem(){
+        var selectedProblemSetIndex = $("#standard-select").val()
+        var selectedProblemSet = sampleProblemSets[selectedProblemSetIndex]
+        var params = {
+            "store": selectedProblemSet.store,
+            "visits": selectedProblemSet.visits,
+            "vehicles": selectedProblemSet.vehicles
+        }
+        {$.ajax({
+            type: 'POST',
+            url: "https://run.mocky.io/v3/c94160f9-390d-477f-b5a3-9549d3a75df3",
+            data: JSON.stringify(params),
+            contentType: "application/json",
+            dataType: "json",
+            success: function (res) {
+                console.log('response', res)
+                if(res && res.status === 0){
+                    var routingPathsSolution = res.data.routingPaths;
+                    $("#problemOutput").val(JSON.stringify(routingPathsSolution))
+                    $("#problemOutputSection").show()
+                } else {
+                    console.log("error:", res.message)
+                }
+                alert(res.message)
+                //location.reload()
+            },
+            error: function (err, error) {
+                message = "Operation failed"
+                alert(message)
+            }
+        })}
+    }
+
+</script>
+
+</html>
