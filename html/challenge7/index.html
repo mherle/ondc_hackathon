@@ -16,6 +16,7 @@
 
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="ondcMapTracking.js"></script>
     <title>ONDC Challenge</title>
     <style>
         body {
@@ -74,6 +75,17 @@
             <label for="problemOutput">Output</label>
             <textarea class="form-control" id="problemOutput" rows="3"></textarea>
           </div>
+        <div id="availableSolutionPath" style="display: none;">
+            <label for="standard-select">Select a sample route</label>
+            <div class="select">
+                <select id="standard-select-solution" style="margin-bottom: 5px;">
+                </select>
+                <button class="btn btn-primary" id="_renderSelectedRoute">Plot Path</button>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div id="map"></div>
     </section>
 </body>
 <script>
@@ -114,6 +126,10 @@
     $("#_solveButton").click(function () {
         solveRoutingProblem()
     })
+    var routingPathsSolution = []
+    var map_init = initializeMap("map");
+    window.map_init = map_init
+    var drawRoutePaths = drawRoute(routingPathsSolution, -1);
 
     function solveRoutingProblem(){
         var selectedProblemSetIndex = $("#standard-select").val()
@@ -132,9 +148,17 @@
             success: function (res) {
                 console.log('response', res)
                 if(res && res.status === 0){
-                    var routingPathsSolution = res.data.routingPaths;
+                    routingPathsSolution = res.data.routingPaths;
                     $("#problemOutput").val(JSON.stringify(routingPathsSolution))
                     $("#problemOutputSection").show()
+                    var solutionSelect = document.getElementById("standard-select-solution")
+                    for(let i=0; i < routingPathsSolution.length; i++){
+                        newOption = document.createElement("option")
+                        newOption.innerText = "Solution " + (i + 1)
+                        newOption.value = i
+                        solutionSelect.appendChild(newOption)
+                    }
+                    $("#availableSolutionPath").show()
                 } else {
                     console.log("error:", res.message)
                 }
@@ -148,6 +172,10 @@
         })}
     }
 
+    $("#_renderSelectedRoute").click(function () {
+        var selectedSolutionPath = $("#standard-select-solution").val()
+        drawRoutePaths = drawRoute(routingPathsSolution, selectedSolutionPath);
+    })
 </script>
 
 </html>
