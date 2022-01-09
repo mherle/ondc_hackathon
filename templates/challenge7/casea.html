@@ -300,7 +300,7 @@
     function handleSubmit(){
         const params = new URLSearchParams(window.location.search)
         let numberOfVehicles = parseInt(params.get('vehicles')) || 1;
-        let startIndex = parseInt(params.get('startNode')) || 0
+        let startIndex = parseInt(params.get('startNode')) || 0;
         //var centerCoordinates = $("#centerCoordinates").val();
         console.log('startIndex is ', startIndex)
         console.log('cenndf ', sampleProblemSets.case_a_data.visit_data[startIndex])
@@ -337,7 +337,11 @@
                                 "visits": visits,
                                 "vehicles": numberOfVehicles,
                             }
-                            console.log("params is ", payload)
+                            if(params.get('roadClosedNode')){
+                                let roadClosedNode = parseInt(params.get('roadClosedNode')) || 2;
+                                payload["roadClosedNode"] = roadClosedNode;
+                            }
+                            console.log("payload is ", payload)
                             solveRoutingProblem(payload)
                         }
                     }
