@@ -32,9 +32,17 @@ def post_request_logging(response):
     return response
 
 
-@routingapi_blueprint.route("/", methods=["GET"])
+@routingapi_blueprint.route("/casec", methods=["GET"])
 def index():
-    return render_template("challenge7/index.html")
+    return render_template("challenge7/casec.html")
+
+@routingapi_blueprint.route("/casea", methods=["GET"])
+def casea():
+    return render_template("challenge7/casea.html")
+
+@routingapi_blueprint.route("/caseb", methods=["GET"])
+def caseb():
+    return render_template("challenge7/caseb.html")
 
 @routingapi_blueprint.route("/api/solve", methods=["POST", "OPTIONS"])
 def solve():

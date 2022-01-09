@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/ondcMapTracking.js"></script>
+    <title>ONDC Challenge7 - case c</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .filter-section {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            margin-left: 1rem;
+        }
+        .info-section {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            margin-left: 1rem;
+        }
+
+        select {
+            appearance: none;
+            background-color: transparent;
+            border: 1px solid black;
+            padding: 0.3em 0;
+            margin: 0;
+            width: 100%;
+            font-family: inherit;
+            font-size: inherit;
+            cursor: inherit;
+            line-height: inherit;
+        }
+
+    </style>
+</head>
+
+<body>
+    <section>
+        <h2 class="text-center"><u>ONDC Innovation Hackathon</u></h2>
+        <h3 class="text-center"><u>Challenge 7 -Delivery Route Optimization
+            </u></h3>
+    </section>
+    <section class="info-section">
+       <div class="row">
+            <div class="col-sm-12 col-md-6">
+                <form>
+                    <div class="form-group row">
+                    <label for="numberOfVehicles" class="col-sm-2 col-form-label">Number of vehicles</label>
+                    <div class="col-sm-10 ">
+                        <input 
+                            id="numberOfVehicles" 
+                            type="number" 
+                            class="form-control" 
+                            id="numberOfVehicles" 
+                            placeholder="Enter number of vehicles" 
+                            value="4"
+                        >
+                    </div>
+                    </div>
+                    <div class="form-group row">
+                    <label for="centerCoordinates" class="col-sm-2 col-form-label">Center coordinates</label>
+                    <div class="col-sm-10 ">
+                        <input 
+                            name="centerCoordinates" 
+                            type="text" 
+                            class="form-control" 
+                            id="centerCoordinates" 
+                            placeholder="12.912335877018496, 77.63315380185875"
+                            value="12.912335877018496, 77.63315380185875"
+                        >
+                    </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="visits" class="col-sm-2 col-form-label">Visits</label>
+                        <div class="col-sm-10 ">
+                            <textarea 
+                                name="visits" 
+                                class="form-control" 
+                                id="visits" 
+                                rows="6"
+                                placeholder="Enter the coordinates separated by new line. e.g.
+                12.922960508613679, 77.64851749383091,
+                12.917355444320027, 77.64886081655655,
+                12.911582933226732, 77.65049159950333,
+                12.914260056402288, 77.60723293607332,
+                12.903802381246239, 77.60989368719699,
+                12.946550593491688, 77.61246860763924"
+                                
+                            >12.922960508613679, 77.64851749383091,
+12.917355444320027, 77.64886081655655,
+12.911582933226732, 77.65049159950333,
+12.914260056402288, 77.60723293607332,
+12.903802381246239, 77.60989368719699,
+12.946550593491688, 77.61246860763924</textarea>
+                        </div>
+                    </div>
+                    
+                </form>
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                    <button onclick="handleSubmit()" class="btn btn-primary">Solve</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6 border border-light">           
+                <div class="form-group ml-2" id="problemOutputSection" style="display: none;">
+                    <h4><u>Solution</u></h4>
+                    <h5 id="routeCountText"></h5>
+                    <ul id="problemOutputList">
+                    </ul>
+                
+                    <button class="btn btn-primary" id="clearPlotting">Clear plotting</button>
+                </div>
+            </div>
+
+       </div>
+            
+        <!-- <div >
+            <label for="standard-select">Select a sample problem</label>
+            <div class="select">
+                <select id="standard-select" style="margin-bottom: 5px;">
+                </select>
+                <button class="btn btn-primary" id="_solveButton">Solve</button>
+            </div>
+        </div> -->
+        <!-- <div class="form-group ml-2" id="problemOutputSection" style="display: none;">
+            <label for="problemOutput"><u class="ml-3">Solution</u></label>
+            <h5 id="routeCountText"></h5>
+            <ul id="problemOutputList">
+            </ul>
+
+            <button class="btn btn-primary" id="clearPlotting">Clear plotting</button>
+        </div> -->
+    </section>
+    <section>
+        <div id="map"></div>
+    </section>
+</body>
+<script>
+    var sampleProblemSets = [
+    {
+        store: [12.912335877018496, 77.63315380185875],
+        visits: [
+            [12.922960508613679, 77.64851749383091],
+            [12.917355444320027, 77.64886081655655],
+            [12.911582933226732, 77.65049159950333],
+            [12.914260056402288, 77.60723293607332],
+            [12.903802381246239, 77.60989368719699],
+            [12.946550593491688, 77.61246860763924]
+        ],
+        vehicles: 3
+    },
+    {
+        store: [12.912335877018496, 77.63315380185875],
+        visits: [
+            [12.922960508613679, 77.64851749383091],
+            [12.917355444320027, 77.64886081655655],
+            [12.911582933226732, 77.65049159950333],
+            [12.914260056402288, 77.60723293607332],
+            [12.903802381246239, 77.60989368719699],
+            [12.946550593491688, 77.61246860763924]
+        ],
+        vehicles: 3
+    }
+    ]
+
+    //var mySelect = document.getElementById("standard-select")
+    //for(let i=0; i < sampleProblemSets.length; i++){
+    //    newOption = document.createElement("option")
+    //    newOption.innerText = "Problem " + (i + 1)
+    //    newOption.value = i
+    //    mySelect.appendChild(newOption)
+    //}
+    //$("#_solveButton").click(function () {
+    //    solveRoutingProblem()
+    //})
+    var routingPathsSolution = []
+    var map_init = initializeMap("map");
+    window.map_init = map_init
+    var drawRoutePaths = drawRoute(routingPathsSolution, [], false);
+
+    function handleSubmit(){
+        var numberOfVehicles = $("#numberOfVehicles").val();
+        var centerCoordinates = $("#centerCoordinates").val();
+        var visits = $("#visits").val();
+        if(!numberOfVehicles || parseInt(numberOfVehicles) <= 0){
+            alert("Invalid value of number of vehicles")
+        } else {
+            numberOfVehicles = parseInt(numberOfVehicles)
+            if(!centerCoordinates){
+                alert("Center coordinates field required")
+            } else {
+                var finalCenterCoordinates = centerCoordinates.split(",")
+                if (finalCenterCoordinates.length <2){
+                    alert("Invalid Center coordinates provided")
+                } else {
+                    finalCenterCoordinates = finalCenterCoordinates.map((item) => parseFloat(item.trim()))
+                    console.log('final coordinates', finalCenterCoordinates)
+                    if(!visits){
+                        alert("visits coordinates required")
+                    } else {
+                        var temp = visits.split("\n");
+                        var finalVisitCoordinates = []
+                        for(let j=0; j<temp.length; j++){
+                            let tempCords = temp[j].split(",")
+                            finalVisitCoordinates.push(
+                                [
+                                    parseFloat(tempCords[0].trim()),
+                                    parseFloat(tempCords[1].trim()),
+                                ]
+                            )
+                        }
+                        console.log('final visit coordinates are', finalVisitCoordinates)
+                        if(finalVisitCoordinates.length <= 0){
+                            alert("Please check if the visit coordinates are correct")
+                        } else {
+                            var params = {
+                                "store": finalCenterCoordinates,
+                                "visits": finalVisitCoordinates,
+                                "vehicles": numberOfVehicles,
+                            }
+                            console.log("params is ", params)
+                            solveRoutingProblem(params)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    function solveRoutingProblem(params){
+        var selectedProblemSetIndex = $("#standard-select").val()
+        var selectedProblemSet = sampleProblemSets[selectedProblemSetIndex]
+        //var params = {
+        //    "store": selectedProblemSet.store,
+        //    "visits": selectedProblemSet.visits,
+        //    "vehicles": selectedProblemSet.vehicles
+        //}
+        {$.ajax({
+            type: 'POST',
+            url: "/challenge7/api/solve",
+            data: JSON.stringify(params),
+            contentType: "application/json",
+            dataType: "json",
+            success: function (res) {
+                console.log('response', res)
+                if(res && res.status === 0){
+                    routingPathsSolution = res.data.routingPaths;
+                    console.log('routing solution : ', routingPathsSolution)
+                    document.getElementById("routeCountText").innerText = routingPathsSolution.length + " routes in total:"
+                    if($("#problemOutputList").length > 0){
+                        $("#problemOutputList").empty();
+                    }
+                    let randomColorsList = []
+                    for(let i=0; i < routingPathsSolution.length; i++){
+                        randomColorsList.push(generateRandomColor())
+                        $("#problemOutputList").append(
+                            `<li><b>Route ${i+1}:</b> ${routingPathsSolution[i].length} points <span style="font-size: larger; color: ${randomColorsList[i]}">&#x25cf;</span></li>`
+                            )
+                        }
+                    $("#problemOutputSection").show()
+                    $("#availableSolutionPath").show()
+                    let avgLats = 0
+                    let avgLngs = 0
+                    let coordinatesCount = 0
+                    for(let j=0; j<routingPathsSolution.length; j++){
+                        for (let k=0; k<routingPathsSolution[j].length; k++){
+                            coordinatesCount += 1
+                            avgLats += routingPathsSolution[j][k][0]
+                            avgLngs += routingPathsSolution[j][k][1]
+                        }
+                    }
+                    avgLats = avgLats/coordinatesCount
+                    avgLngs = avgLngs/coordinatesCount
+                    let newCenterCoordinates = [avgLats, avgLngs]
+                    map_init.setView(new window.L.LatLng(newCenterCoordinates[0], newCenterCoordinates[1]), 13)
+                    drawRoutePaths = drawRoute(routingPathsSolution, randomColorsList, true);
+                } else {
+                    console.log("error:", res.message)
+                    alert(res.message)
+                }
+                //location.reload()
+            },
+            error: function (err, error) {
+                message = "Operation failed"
+                alert(message)
+            }
+        })}
+    }
+
+    $("#clearPlotting").click(function() {
+        clearMapContents()
+    })
+</script>
+
+</html>

@@ -19,10 +19,10 @@ def createApp():
 app = createApp()
 
 
-@app.route('/')
+@app.route('/challenge8')
 def index():
     """Root"""
-    return render_template('index.html')
+    return render_template('challenge8/index.html')
 
 
 @app.errorhandler(500)
