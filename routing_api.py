@@ -7,7 +7,7 @@ from utils import get_logger
 import routing_solver
 
 
-routingapi_blueprint = Blueprint('challenge7', __name__, static_folder='html/challenge7')
+routingapi_blueprint = Blueprint('challenge7', __name__, static_folder='static')
 
 ROUTING_LOG_NAME = "routing"
 request_logger = get_logger(ROUTING_LOG_NAME)
